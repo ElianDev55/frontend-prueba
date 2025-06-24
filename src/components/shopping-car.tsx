@@ -9,6 +9,8 @@ import { useGetChips } from "../hooks/useChips"
 import { useGetDishes } from "../hooks/useDishes"
 import { useGetDrinks } from "../hooks/useDrinks"
 import { useGetSauces } from "../hooks/useSauces"
+import type { EmailTemplate } from "../interfaces/email.interface"
+import { transformBillResponse } from "../lib/transform-bill-response"
 import { transformJson } from "../lib/transform-json"
 
 // Interfaces dentro del componente
@@ -182,6 +184,49 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           console.error('Error posting bill detail:', err);
         }
       }
+            try {
+              const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/bills/sendBi-bill/${billId}`, {
+                method: 'GET',
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`,
+                  'Content-Type': 'application/json',
+                },
+                // Removed body: GET requests cannot have a body
+              });
+              const data = await response.json();
+              const transformedData = transformBillResponse(data)
+              if (transformedData) {
+                try {
+                  const emailData: EmailTemplate = {
+                    to: transformedData.user.email,
+                    from: "jevillaurrutia@gmail.com",
+                    subject: "Your Order Details",
+                    text: "Here are your order details.",
+                    templateId: "d-c9297b3d243840f383d20ea7884b06fb", // Replace with your actual template ID
+                    dynamicTemplateData: transformedData,
+                  }
+                  const responseGrid = await fetch(`${import.meta.env.VITE_BACKEND_URL}/send-grid`, {
+                    method: 'POST',
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('token')}`,
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(emailData),
+                  });
+                  console.log("SendGrid response:", await responseGrid.json())
+                } catch (err) {
+                  // Optionally handle error here
+                  console.error('Error sending email:', err);
+                }
+              }
+
+            } catch (err) {
+              // Optionally handle error here
+              console.error('Error sending bill:', err);
+            }
+
+             
+
     });
 
     console.log(data, 'data');
