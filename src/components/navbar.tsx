@@ -3,13 +3,6 @@ import { Link, useNavigate } from "react-router-dom"
 import shoppingCart from "../assets/shopping-cart.svg"
 import CartSidebar from "./shopping-car"
 
-interface CartItem {
-  id: string
-  name: string
-  price: string
-  quantity: number
-  image: string
-}
 
 export default function Navbar() {
   const navigate = useNavigate()

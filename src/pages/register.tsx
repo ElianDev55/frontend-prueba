@@ -14,7 +14,7 @@ interface RegisterForm {
 
 export default function RegisterPage() {
 
-    const { register, loading, error } = useRegister()
+    const { register, error } = useRegister()
     const navigate = useNavigate()
 
 

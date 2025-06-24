@@ -12,7 +12,7 @@ export const Home = () => {
     <>
       <Navbar />
       <div>
-        <GridLayout card={dishes.data} title="Delicious Dishes" />
+        <GridLayout card  ={dishes.data} title="Delicious Dishes" />
       </div>
     </>
   );

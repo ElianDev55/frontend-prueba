@@ -3,7 +3,7 @@ import type { BillsByUserResponse } from '../interfaces/bill-by-user.interface';
 
 export const useGetBillsByUser = () => {
   const [bills, setBills] = useState<BillsByUserResponse>({
-    data: [],
+    data: {},
     date: '',
     status: 0,
   });

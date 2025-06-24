@@ -5,7 +5,6 @@ import { useState } from "react"
 import Swal from "sweetalert2"
 import { useGetAdditionalProducts } from "../hooks/useAdditionalProducts"
 import { usePostBill } from "../hooks/useBills"
-import { usePostBillDetails } from "../hooks/useBills-details"
 import { useGetChips } from "../hooks/useChips"
 import { useGetDishes } from "../hooks/useDishes"
 import { useGetDrinks } from "../hooks/useDrinks"
@@ -35,7 +34,6 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const { sauces, loading: saucesLoading } = useGetSauces()
   const [cart, setCart] = useState<CartItem[]>([])
   const { postBill } = usePostBill()
-  const { postBillDetails } = usePostBillDetails()
   const totalDishes = cart.filter((item) => item.category === "dishes").reduce((total, item) => total + item.quantity, 0)
   const totalAdditionals = cart
     .filter((item) => item.category === "additional")

@@ -2,7 +2,7 @@ import Navbar from "../components/navbar"
 import { useGetUserById } from "../hooks/useUsers"
 
 export const Profile = () => {
-  const { user, loading, error } = useGetUserById()
+  const { user, loading } = useGetUserById()
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {

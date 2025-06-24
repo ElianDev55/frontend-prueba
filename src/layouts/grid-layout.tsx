@@ -1,7 +1,6 @@
 import { Card } from "../components/card";
-import type { CardInterface } from "../interfaces/card.interface";
 
-export const GridLayout = ({ card, title = ""}: { card: CardInterface[], title: string }) => {
+export const GridLayout = ({ card, title = ""}: { card: any[], title: string }) => {
   return  (
   <div className="bg-gray-50 min-h-screen">
       {/* Container principal */}

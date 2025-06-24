@@ -12,7 +12,7 @@ interface LoginForm {
 
 export default function LoginPage() {
 
-  const { login, loading, error } = useLogin()
+  const { login } = useLogin()
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState<LoginForm>({
