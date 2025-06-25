@@ -79,6 +79,7 @@ export default function LoginPage() {
         const token = localStorage.getItem("token");
         const user = localStorage.getItem("user");
         if (token && user && token.length > 0 && user.length > 0) {
+          window.location.reload();
           navigate("/home");
         }
       } else if (response.status === 400) {
