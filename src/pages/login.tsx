@@ -75,7 +75,7 @@ export default function LoginPage() {
 
         setTimeout(() => {
           navigate("/home")
-        }, 100)
+        }, 1000)
 
       } else if (response.status === 400) {
         Swal.fire({
