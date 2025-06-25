@@ -9,6 +9,7 @@ import Register from "./pages/register";
 function App() {
   const { response, cargar } = useValidateToken();
 
+  // Validar el token cada vez que se navega a una ruta protegida
   if (cargar) {
     return <div>Loading...</div>;
   }
@@ -16,17 +17,19 @@ function App() {
   const token = localStorage.getItem('token');
   const user = localStorage.getItem('user');
 
-  let isLoggedIn = false;
+  // Función para validar si el token es válido
+  const isTokenValid = () => {
+    if (!token || !user) return false;
+    return response.status === 201;
+  };
 
-  if (token && user) {
-    isLoggedIn = response.status === 201;
-    if (!isLoggedIn) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-    }
+  // Si el token no es válido, limpiar el localStorage
+  if (token && user && response.status !== 201) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
-  console.log(isLoggedIn);
+  const isLoggedIn = isTokenValid();
 
 
   return (
