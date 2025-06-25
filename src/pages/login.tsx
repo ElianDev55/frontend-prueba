@@ -64,17 +64,19 @@ export default function LoginPage() {
 
     try {
       const response = await login(formData)
-      console.log("Login response:", response.status)
       if (response.status === 201) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', response.data.id);
-        navigate("/home")
         Swal.fire({
           title: "Login successful!",
           icon: "success",
           draggable: true
         });
-        
+
+        setTimeout(() => {
+          navigate("/home")
+        }, 100)
+
       } else if (response.status === 400) {
         Swal.fire({
           title: response.message,

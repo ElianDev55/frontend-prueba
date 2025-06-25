@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useValidateToken } from "./hooks/useAutorization";
 import { Bills } from "./pages/bill";
 import { Home } from "./pages/home";
 import Login from "./pages/login";
@@ -6,8 +7,27 @@ import { Profile } from "./pages/profile";
 import Register from "./pages/register";
 
 function App() {
+  const { response, cargar } = useValidateToken();
 
-  const isLoggedIn = !!localStorage.getItem("token");
+  if (cargar) {
+    return <div>Loading...</div>;
+  }
+
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+
+  let isLoggedIn = false;
+
+  if (token && user) {
+    isLoggedIn = response.status === 201;
+    if (!isLoggedIn) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+  }
+
+  console.log(isLoggedIn);
+
 
   return (
     <BrowserRouter>

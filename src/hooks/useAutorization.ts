@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { LoginInterface } from '../interfaces/login.interface';
 import type { RegisterInterface } from '../interfaces/register.interface';
 
@@ -94,4 +94,41 @@ export const useLogout = () => {
   };
 
   return { logout, loading, error };
+};
+
+export const useValidateToken = () => {
+  const [response, setResponse] = useState<any>([]);
+  const [cargar, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const validateToken = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/validate-token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            token: localStorage.getItem('token'),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al obtener los platos');
+        }
+
+        const data = await response.json();
+        setResponse(data);
+      } catch (err: any) {
+        setError(err.message || 'Algo salió mal');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    validateToken();
+  }, []);
+
+  return { response, cargar, error };
 };
