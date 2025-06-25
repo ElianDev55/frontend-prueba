@@ -73,10 +73,14 @@ export default function LoginPage() {
           draggable: true
         });
 
-        setTimeout(() => {
-          navigate("/home")
-        }, 1000)
+        localStorage.getItem("token");
 
+        // pero si este valor tiene datos
+        const token = localStorage.getItem("token");
+        const user = localStorage.getItem("user");
+        if (token && user && token.length > 0 && user.length > 0) {
+          navigate("/home");
+        }
       } else if (response.status === 400) {
         Swal.fire({
           title: response.message,
