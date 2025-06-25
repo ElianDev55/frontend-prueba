@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { useValidateToken } from "./hooks/useAutorization";
 import { Bills } from "./pages/bill";
 import { Home } from "./pages/home";
 import Login from "./pages/login";
@@ -7,9 +7,50 @@ import { Profile } from "./pages/profile";
 import Register from "./pages/register";
 
 function App() {
-  const { response, cargar } = useValidateToken();
+  const [validateData, setValidateData] = useState<{ response: any; cargar: boolean }>({
+    response: {},
+    cargar: true,
+  });
 
-  // Validar el token cada vez que se navega a una ruta protegida
+  // Ejecutar cada 1 segundo
+  useEffect(() => {
+    let intervalId: any;
+
+    const runValidation = async () => {
+      // Llama a useValidateToken manualmente
+      // useValidateToken es un custom hook, así que extraemos la lógica aquí
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/validate-token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            token: localStorage.getItem('token'),
+          }),
+        });
+
+        if (!response.ok) {
+          setValidateData({ response: { status: response.status }, cargar: false });
+          return;
+        }
+
+        const data = await response.json();
+        setValidateData({ response: data, cargar: false });
+      } catch (err: any) {
+        setValidateData({ response: {}, cargar: false });
+      }
+    };
+
+    // Ejecutar inmediatamente y luego cada 1 segundo
+    runValidation();
+    intervalId = setInterval(runValidation, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const { response, cargar } = validateData;
+
   if (cargar) {
     return <div>Loading...</div>;
   }
@@ -17,19 +58,17 @@ function App() {
   const token = localStorage.getItem('token');
   const user = localStorage.getItem('user');
 
-  // Función para validar si el token es válido
-  const isTokenValid = () => {
-    if (!token || !user) return false;
-    return response.status === 201;
-  };
+  let isLoggedIn = false;
 
-  // Si el token no es válido, limpiar el localStorage
-  if (token && user && response.status !== 201) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  if (token && user) {
+    isLoggedIn = response.status === 201;
+    if (!isLoggedIn) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
   }
 
-  const isLoggedIn = isTokenValid();
+  console.log(isLoggedIn);
 
 
   return (
