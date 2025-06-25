@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useValidateToken } from "./hooks/useAutorization";
 import { Bills } from "./pages/bill";
 import { Home } from "./pages/home";
@@ -32,7 +32,6 @@ function App() {
 
 
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
@@ -53,7 +52,6 @@ function App() {
           element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
         />
       </Routes>
-    </BrowserRouter>
   );
 }
 
